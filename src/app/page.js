@@ -1,6 +1,6 @@
 "use client";
 import * as React from 'react'
-import * as THREE from 'three';
+import * as THREE from 'three'
 import Controller from './controller.js'
 
 export default function Home() {
@@ -174,7 +174,7 @@ export default function Home() {
   }
 
   const quaternionToAngle = (q)=>{
-    const wk_angle = 2 * Math.acos(q.w)
+    const wk_angle = 2 * Math.acos(round(q.w))
     if(wk_angle === 0){
       return {angle:round(toAngle(wk_angle)),axis:new THREE.Vector3(0,0,0)}
     }
@@ -277,7 +277,7 @@ export default function Home() {
       ).multiply(
         new THREE.Matrix4().setPosition(joint_pos.j7.x,joint_pos.j7.y,joint_pos.j7.z)
       )
-      const result_target = new THREE.Vector4(0,0,0,1).applyMatrix4(base_m4)
+      const result_target = new THREE.Vector3().applyMatrix4(base_m4)
       const sabun_pos = pos_sub(target,result_target)
       const sabun_distance = sabun_pos.x**2+sabun_pos.y**2+sabun_pos.z**2
       if(round(sabun_distance) <= 0){
@@ -432,6 +432,8 @@ export default function Home() {
         wk_j3_rotate = angle_j3
       }
     }
+    const j4_sabun = calc_side_2(-joint_pos.j4.z,joint_pos.j4.y)
+    wk_j3_rotate = wk_j3_rotate + j4_sabun.k
     return {j2_rotate:wk_j2_rotate,j3_rotate:wk_j3_rotate,dsp_message}
   }
   
@@ -445,6 +447,9 @@ export default function Home() {
       return angle
     }
     const amari = angle % 180
+    if(amari === 0){
+      return amari
+    }else
     if(amari < 0){
       return (180 + amari)
     }else{
